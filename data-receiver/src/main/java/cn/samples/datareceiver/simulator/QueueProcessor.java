@@ -71,6 +71,7 @@ public class QueueProcessor {
 
     /**
      * 处理消息数据
+     *
      * @param data
      */
     private void processData(MsgData data) {
@@ -85,7 +86,7 @@ public class QueueProcessor {
         String chnlNo = dp.getChnlNo();
         X24 x24 = PackageUtil.getX24FromXml(dp.getXml());
         String cacheKey = areaId + "-" + chnlNo;
-        List<DEVICES> devicesList =  x24.getDevices();
+        List<DEVICES> devicesList = x24.getDevices();
         Map<String, String> redisMap = redisUtil.getAllFromHashCache(cacheKey);
         // 设置变更记录的有效期30分钟
         redisUtil.setExpire("change-" + cacheKey, 10, TimeUnit.SECONDS);
@@ -95,18 +96,18 @@ public class QueueProcessor {
             // hashValue
             String hashValue = devices.getStatusValue() + "-" + devices.getErrCode();
             String jsonStr = JSON.toJSONString(devices);
-            if(CollectionUtils.isEmpty(redisMap)){
+            if (CollectionUtils.isEmpty(redisMap)) {
                 redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
 
                 redisUtil.saveToHashCache("change:" + cacheKey, hashKey, jsonStr);
             } else {
                 // 查看哈希表 key 中，指定的字段是否存在
                 String hashV = redisUtil.getFromHashCache(cacheKey, hashKey);
-                if(StringUtils.isEmpty(hashV)) {
+                if (StringUtils.isEmpty(hashV)) {
                     redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
                     redisUtil.saveToHashCache("change:" + cacheKey, hashKey, jsonStr);
                 } else {
-                    if(!hashV.equals(hashValue)) {
+                    if (!hashV.equals(hashValue)) {
                         redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
                         redisUtil.saveToHashCache("change:" + cacheKey, hashKey, jsonStr);
                     }

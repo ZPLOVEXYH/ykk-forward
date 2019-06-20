@@ -28,6 +28,6 @@ public class X24DataControlller {
         String jsonStr = redisUtil.getFromHashCache("front_show", "area_channel");
         List<X24> x24List = JSON.parseArray(jsonStr, X24.class);
 
-        return new Result(0, "success", x24List);
+        return new Result(0, true, "ok", x24List);
     }
 }

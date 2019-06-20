@@ -88,7 +88,7 @@ public class DataReceiveController {
         dataReceive.setXmlString(x24List.toString());
 
         boolean insertBool = dataReceiveService.insert(dataReceive);
-        if(insertBool) {
+        if (insertBool) {
             log.info("插入成功：{}", insertBool);
         } else {
             log.info("插入失败：{}", insertBool);

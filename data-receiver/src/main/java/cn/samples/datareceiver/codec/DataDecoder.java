@@ -32,7 +32,7 @@ public class DataDecoder extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         int cnt = in.refCnt();
         log.info("打印出来的计数为：{}", cnt);
-        if(cnt > 0){
+        if (cnt > 0) {
 
             DataPackage dp = decode(in);
             if (null != dp) {

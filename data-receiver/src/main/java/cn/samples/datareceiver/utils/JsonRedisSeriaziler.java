@@ -9,85 +9,84 @@ import java.util.List;
 
 /**
  * 不使用sdr自带的json序列化工具，一切操作基于string
- * 
- * @author yinheng
  *
+ * @author yinheng
  */
 @Component
 public class JsonRedisSeriaziler {
 
-	public static final String EMPTY_JSON = "{}";
+    public static final String EMPTY_JSON = "{}";
 
-	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
-	protected ObjectMapper objectMapper = new ObjectMapper();
+    protected ObjectMapper objectMapper = new ObjectMapper();
 
-	public JsonRedisSeriaziler() {
-	}
+    public JsonRedisSeriaziler() {
+    }
 
-	/**
-	 * java-object as json-string
-	 * 
-	 * @param object
-	 * @return
-	 */
-	public String seriazileAsString(Object object) {
-		if (object == null) {
-			return EMPTY_JSON;
-		}
+    /**
+     * java-object as json-string
+     *
+     * @param object
+     * @return
+     */
+    public String seriazileAsString(Object object) {
+        if (object == null) {
+            return EMPTY_JSON;
+        }
 
-		String result = null;
-		try {
-			result = this.objectMapper.writeValueAsString(object);
-		} catch (Exception ex) {
-			throw new RuntimeException("Could not write JSON: " + ex.getMessage(), ex);
-		}
+        String result = null;
+        try {
+            result = this.objectMapper.writeValueAsString(object);
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not write JSON: " + ex.getMessage(), ex);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * json-string to java-object
-	 * 
-	 * @param str
-	 * @return
-	 */
-	public <T> T deserializeAsObject(String str, Class<T> clazz) {
-		if (str == null || clazz == null) {
-			return null;
-		}
+    /**
+     * json-string to java-object
+     *
+     * @param str
+     * @return
+     */
+    public <T> T deserializeAsObject(String str, Class<T> clazz) {
+        if (str == null || clazz == null) {
+            return null;
+        }
 
-		T result = null;
-		try {
-			result = this.objectMapper.readValue(str, clazz);
-		} catch (Exception ex) {
-			throw new RuntimeException("Could not write JSON: " + ex.getMessage(), ex);
-		}
-		return result;
-	}
+        T result = null;
+        try {
+            result = this.objectMapper.readValue(str, clazz);
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not write JSON: " + ex.getMessage(), ex);
+        }
+        return result;
+    }
 
-	/**
-	 * json to list
-	 * 
-	 * @param str
-	 * @param clazz
-	 * @return
-	 */
-	public <T> List<T> deserializeAsList(String str, Class<T> clazz) {
-		if (str == null || clazz == null) {
-			return null;
-		}
+    /**
+     * json to list
+     *
+     * @param str
+     * @param clazz
+     * @return
+     */
+    public <T> List<T> deserializeAsList(String str, Class<T> clazz) {
+        if (str == null || clazz == null) {
+            return null;
+        }
 
-		TypeFactory tf = TypeFactory.defaultInstance();
-		// 指定容器结构和类型（这里是ArrayList和clazz）
-		List<T> list = null;
-		try {
-			list = objectMapper.readValue(str, tf.constructCollectionType(List.class, clazz));
-		} catch (Exception ex) {
-			throw new RuntimeException("Could not write JSON: " + ex.getMessage(), ex);
-		}
-		return list;
-	}
+        TypeFactory tf = TypeFactory.defaultInstance();
+        // 指定容器结构和类型（这里是ArrayList和clazz）
+        List<T> list = null;
+        try {
+            list = objectMapper.readValue(str, tf.constructCollectionType(List.class, clazz));
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not write JSON: " + ex.getMessage(), ex);
+        }
+        return list;
+    }
 
 /*	public static void main(String[] args) {
 		JsonRedisSeriaziler seriaziler = new JsonRedisSeriaziler();

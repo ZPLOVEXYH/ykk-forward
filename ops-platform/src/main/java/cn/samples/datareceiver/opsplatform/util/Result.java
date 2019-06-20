@@ -13,7 +13,7 @@ public class Result<T> {
     private String msg;
     private T data;
 
-    public Result(){
+    public Result() {
         this.code = OK;
         this.msg = "success";
     }

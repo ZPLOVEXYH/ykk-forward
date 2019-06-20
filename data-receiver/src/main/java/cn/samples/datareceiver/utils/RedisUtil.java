@@ -162,7 +162,7 @@ public class RedisUtil {
     /**
      * 根据redis keys通配符命令获取得到key集合
      */
-    public Set<String> getKeyByPattern(String pattern){
+    public Set<String> getKeyByPattern(String pattern) {
         return stringRedisTemplate.keys(pattern);
     }
 

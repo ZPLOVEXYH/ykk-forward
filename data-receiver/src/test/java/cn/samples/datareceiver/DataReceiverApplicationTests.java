@@ -44,7 +44,7 @@ public class DataReceiverApplicationTests {
         String chnlNo = "2222222222";
         X24 x24 = PackageUtil.getX24FromXml(xml);
         String cacheKey = areaId + "-" + chnlNo;
-        List<DEVICES> devicesList =  x24.getDevices();
+        List<DEVICES> devicesList = x24.getDevices();
         Map<String, String> redisMap = redisUtil.getAllFromHashCache(cacheKey);
         // 设置变更记录的有效期30分钟
 //        redisUtil.setExpire("change-" + cacheKey, 30, TimeUnit.MINUTES);
@@ -55,18 +55,18 @@ public class DataReceiverApplicationTests {
             // hashValue
             String hashValue = devices.getStatusValue() + "-" + devices.getErrCode();
             String jsonStr = JSON.toJSONString(devices);
-            if(CollectionUtils.isEmpty(redisMap)){
+            if (CollectionUtils.isEmpty(redisMap)) {
                 redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
 
                 redisUtil.saveToHashCache("change:" + cacheKey, hashKey, jsonStr);
             } else {
                 // 查看哈希表 key 中，指定的字段是否存在
                 String hashV = redisUtil.getFromHashCache(cacheKey, hashKey);
-                if(StringUtils.isEmpty(hashV)) {
+                if (StringUtils.isEmpty(hashV)) {
                     redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
                     redisUtil.saveToHashCache("change:" + cacheKey, hashKey, jsonStr);
                 } else {
-                    if(!hashV.equals(hashValue)) {
+                    if (!hashV.equals(hashValue)) {
                         redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
                         redisUtil.saveToHashCache("change:" + cacheKey, hashKey, jsonStr);
                     }
@@ -86,10 +86,10 @@ public class DataReceiverApplicationTests {
         // 场站号
         String areaId = x24.getAreaId();
         // 通道号
-        String chnlNo = x24.getChalNo();
+        String chnlNo = x24.getChnlNo();
         // area-channel hash key值
         String cacheKey = areaId + "-" + chnlNo;
-        List<DEVICES> devicesList =  x24.getDevices();
+        List<DEVICES> devicesList = x24.getDevices();
         Map<String, String> redisMap = redisUtil.getAllFromHashCache(cacheKey);
         devicesList.stream().forEach(devices -> {
             // hashKey
@@ -100,17 +100,17 @@ public class DataReceiverApplicationTests {
             String jsonStr = JSONObject.toJSONString(devices);
 //            JSON.toJSONString(devices);
             log.info("jsonStr:{}", jsonStr);
-            if(CollectionUtils.isEmpty(redisMap)){
+            if (CollectionUtils.isEmpty(redisMap)) {
                 redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
                 redisUtil.saveToHashCache("device_info", cacheKey + ":" + hashKey, jsonStr);
             } else {
                 // 查看哈希表 key 中，指定的字段是否存在
                 String hashV = redisUtil.getFromHashCache(cacheKey, hashKey);
-                if(StringUtils.isEmpty(hashV)) {
+                if (StringUtils.isEmpty(hashV)) {
                     redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
                     redisUtil.saveToHashCache("device_info", cacheKey + ":" + hashKey, jsonStr);
                 } else {
-                    if(!hashV.equals(hashValue)) {
+                    if (!hashV.equals(hashValue)) {
                         redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
                         redisUtil.saveToHashCache("device_info", cacheKey + ":" + hashKey, jsonStr);
                     }
@@ -122,10 +122,10 @@ public class DataReceiverApplicationTests {
             // 判断通道关键设备的状态是否出现故障，如果出现故障，那么通道的状态也设置为故障
             String deviceCode = devices.getDeviceCode();
             // 如果1表示关键设备，那么获取设备的状态值判断
-            if("1".equals(deviceCode)) {
+            if ("1".equals(deviceCode)) {
                 // 获取关键设备的状态值，如果社保的状态值为故障状态，那么通道状态为故障状态
                 int statusValue = devices.getStatusValue();
-                if("1".equals(statusValue)) {
+                if ("1".equals(statusValue)) {
                     channel.setChnlState("1");
                 }
             }
@@ -164,7 +164,7 @@ public class DataReceiverApplicationTests {
         });
 
         map.entrySet().stream().forEach(x -> {
-           log.info("key:{}, value:{}", x.getKey(), x.getValue().toString());
+            log.info("key:{}, value:{}", x.getKey(), x.getValue().toString());
         });
 
         // 根据redis hash key获取得到hash value里面的field和对应的value值
@@ -190,8 +190,8 @@ public class DataReceiverApplicationTests {
             Long currentTime = System.currentTimeMillis();
             int gap = (int) ((currentTime - lastUpdateTime) / (1000 * 60));
             log.info("util.CountTimeGap 两个时间之间的分钟差gap为：{}", gap);
-            if(gap > 30){
-                x24.setChalState("1");
+            if (gap > 30) {
+                x24.setChnlState("1");
             }
 
             log.info("x24_2:{}", x24.toString());
@@ -210,7 +210,7 @@ public class DataReceiverApplicationTests {
     }
 
     @Test
-    public void getRedisDataTransToPlatform(){
+    public void getRedisDataTransToPlatform() {
         // 根据redis keys 通配符获取得到所有的key值
         Set<String> keySets = redisUtil.getKeyByPattern("change*");
         // 根据场站号来合并key值

@@ -10,22 +10,27 @@ public class Result<T> {
     public static final Integer Error = -1;
 
     private Integer code;
+    private boolean success;
     private String msg;
     private T data;
 
-    public Result(){
+    public Result() {
         this.code = OK;
-        this.msg = "success";
+        this.success = true;
+        this.msg = "OK";
     }
 
-    public Result(Integer code, String msg) {
+    public Result(Integer code, boolean success, String msg) {
         super();
         this.code = code;
+        this.success = success;
         this.msg = msg;
     }
 
-    public Result(String msg, T data) {
+    public Result(Integer code, boolean success, String msg, T data) {
         super();
+        this.code = code;
+        this.success = success;
         this.msg = msg;
         this.data = data;
     }
