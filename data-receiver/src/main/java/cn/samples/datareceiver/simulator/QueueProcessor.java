@@ -85,15 +85,15 @@ public class QueueProcessor {
         String chnlNo = dp.getChnlNo();
         X24 x24 = PackageUtil.getX24FromXml(dp.getXml());
         String cacheKey = areaId + "-" + chnlNo;
-        List<DEVICES> devicesList =  x24.getDEVICES();
+        List<DEVICES> devicesList =  x24.getDevices();
         Map<String, String> redisMap = redisUtil.getAllFromHashCache(cacheKey);
         // 设置变更记录的有效期30分钟
         redisUtil.setExpire("change-" + cacheKey, 10, TimeUnit.SECONDS);
         devicesList.stream().forEach(devices -> {
             // hashKey
-            String hashKey = devices.getDEVICE_ID();
+            String hashKey = devices.getDeviceId();
             // hashValue
-            String hashValue = devices.getSTATUS_VALUE() + "-" + devices.getERR_CODE();
+            String hashValue = devices.getStatusValue() + "-" + devices.getErrCode();
             String jsonStr = JSON.toJSONString(devices);
             if(CollectionUtils.isEmpty(redisMap)){
                 redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);

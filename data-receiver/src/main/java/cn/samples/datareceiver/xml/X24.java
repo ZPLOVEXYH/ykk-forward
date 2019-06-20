@@ -1,5 +1,8 @@
 package cn.samples.datareceiver.xml;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
@@ -14,55 +17,34 @@ import java.util.List;
  *
  */
 @Root(name = "DEVICE_STATUS")
+@Setter
+@Getter
+@ToString
 public class X24 /* extends BaseModel */ implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Attribute
-	protected String AREA_ID; // 场站编号（10位）
-	@Attribute
-	protected String CHNL_NO; // 通道编号（10位）
-	@Attribute(required = false)
-	protected String I_E_TYPE; // I表示进卡口，O（字母）表示出卡口
+	// 场站编号（10位）
+	@Attribute(name = "AREA_ID")
+	protected String areaId;
 
-	@ElementList(inline = true, required = false)
-	private List<DEVICES> DEVICES; // 如果卡口没有此设备，则相应的标签就不存在
+	// 通道编号（10位）
+	@Attribute(name = "CHNL_NO")
+	protected String chalNo;
 
-	public String getAREA_ID() {
-		return AREA_ID;
-	}
+	// 通道状态：未登陆、正常（登陆）、注销、故障、告警
+	protected String chalState;
 
-	public void setAREA_ID(String aREA_ID) {
-		AREA_ID = aREA_ID;
-	}
+	// 最近一次的更新时间
+	protected Long lastUpdateTime;
 
-	public String getCHNL_NO() {
-		return CHNL_NO;
-	}
+	// I表示进卡口，O（字母）表示出卡口
+	@Attribute(name = "I_E_TYPE", required = false)
+	protected String ieType;
 
-	public void setCHNL_NO(String cHNL_NO) {
-		CHNL_NO = cHNL_NO;
-	}
+	// 如果卡口没有此设备，则相应的标签就不存在
+	@ElementList(inline = true, required = false, name = "DEVICES")
+	private List<DEVICES> devices;
 
-	public String getI_E_TYPE() {
-		return I_E_TYPE;
-	}
 
-	public void setI_E_TYPE(String i_E_TYPE) {
-		I_E_TYPE = i_E_TYPE;
-	}
-
-	public List<DEVICES> getDEVICES() {
-		return DEVICES;
-	}
-
-	public void setDEVICES(List<DEVICES> dEVICES) {
-		DEVICES = dEVICES;
-	}
-
-	@Override
-	public String toString() {
-		return "X24 [AREA_ID=" + AREA_ID + ", CHNL_NO=" + CHNL_NO + ", I_E_TYPE=" + I_E_TYPE + ", DEVICES=" + DEVICES
-				+ "]";
-	}
 
 }

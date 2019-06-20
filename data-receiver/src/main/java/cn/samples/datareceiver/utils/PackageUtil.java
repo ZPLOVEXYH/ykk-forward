@@ -1,5 +1,6 @@
 package cn.samples.datareceiver.utils;
 
+import cn.samples.datareceiver.xml.CHANNEL;
 import cn.samples.datareceiver.xml.X24;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,10 @@ public class PackageUtil {
 
     public static X24 getX24FromXml(String xml) {
         return CommonUtil.parseXmlModel(xml, X24.class);
+    }
+
+    public static CHANNEL getChannelFromXml(String xml) {
+        return CommonUtil.parseXmlModel(xml, CHANNEL.class);
     }
 
     // Bean --> Map 1: 利用Introspector和PropertyDescriptor 将Bean --> Map

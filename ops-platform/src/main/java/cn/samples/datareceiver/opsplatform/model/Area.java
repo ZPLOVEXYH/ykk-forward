@@ -1,5 +1,6 @@
 package cn.samples.datareceiver.opsplatform.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.*;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(value = "area")
 public class Area implements Serializable {
 
     /**

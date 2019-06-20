@@ -1,5 +1,6 @@
 package cn.samples.datareceiver.utils;
 
+import cn.samples.datareceiver.xml.X24;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class RedisUtil {
     @Autowired
     private JsonRedisSeriaziler jsonRedisSeriaziler;
 
+    @Autowired
+    RedisTemplate redisTemplate;
+
     private void handleRedisException(Exception e) {
         if (e instanceof RedisConnectionFailureException || e instanceof JedisConnectionException) {
             log.warn("redis连接失败，请检查redis配置");
@@ -34,6 +38,15 @@ public class RedisUtil {
         ValueOperations<String, String> valueOper = stringRedisTemplate.opsForValue();
         try {
             valueOper.set(cacheKey, value);
+        } catch (Exception e) {
+            handleRedisException(e);
+        }
+    }
+
+    public void saveToKeyListValue(String cacheKey, List<X24> value) {
+        ListOperations<String, List<X24>> listOperations = redisTemplate.opsForList();
+        try {
+            listOperations.rightPush(cacheKey, value);
         } catch (Exception e) {
             handleRedisException(e);
         }
