@@ -121,7 +121,8 @@ public class DataReceiverApplication implements CommandLineRunner {
         executorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                queueprocessor.pushX24Msg();
+//                queueprocessor.pushX24Msg();
+                queueprocessor.clockPushX24Msg();
             }
         }, perid, perid, TimeUnit.MINUTES);
     }
