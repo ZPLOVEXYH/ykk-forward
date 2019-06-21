@@ -169,9 +169,9 @@ public class QueueProcessor {
             // 将x24对象转成jsonStr类型的
             CHANNEL channel = PackageUtil.getChannelFromXml(xml);
             // 判断通道关键设备的状态是否出现故障，如果出现故障，那么通道的状态也设置为故障
-            String deviceCode = devices.getDeviceCode();
+            int isKeyDev = devices.getIsKeyDev();
             // 如果1表示关键设备，那么获取设备的状态值判断
-            if ("1".equals(deviceCode)) {
+            if (1 == isKeyDev) {
                 // 获取关键设备的状态值，如果社保的状态值为故障状态，那么通道状态为故障状态
                 int statusValue = devices.getStatusValue();
                 if ("1".equals(statusValue)) {

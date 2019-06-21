@@ -58,9 +58,9 @@ public class DEVICES implements Serializable {
     @Element(required = false, name = "DISK_DATA")
     private Long diskData;
 
-    // 关键设备标识
-    @Element(required = false, name = "DEVICE_CODE")
-    private String deviceCode;
+    // 关键设备标识（0：非关键设备，1关键设备）
+    @Element(required = false, name = "IS_KEY_DEV")
+    private Integer isKeyDev;
 
     @Validate
     private void validate() throws Exception {
