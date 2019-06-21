@@ -1,5 +1,6 @@
 package cn.samples.datareceiver.xml;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,7 +11,6 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Validate;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @Root(name = "DEVICES")
 @Setter
@@ -36,7 +36,11 @@ public class DEVICES implements Serializable {
     @Element(required = false, name = "ERR_CODE")
     private String errCode;
 
-    private Date occurtime = new Date();
+    /**
+     * 日期字段json格式化操作
+     */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Long occurtime = System.currentTimeMillis();
 
     // CPU占用大小，百分比（最大100%）
     @Element(required = false, name = "SYS_CPU")

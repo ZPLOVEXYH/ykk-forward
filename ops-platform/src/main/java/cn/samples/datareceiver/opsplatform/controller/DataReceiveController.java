@@ -94,7 +94,7 @@ public class DataReceiveController {
             log.info("插入失败：{}", insertBool);
         }
 
-        return new Result(0, "success", dataReceiveService.selectDataReceiveById(1L));
+        return new Result(0, "success");
 
     }
 }

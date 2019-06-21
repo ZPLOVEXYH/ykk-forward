@@ -118,12 +118,12 @@ public class DataReceiverApplication implements CommandLineRunner {
 //        第n次调度开始时间点=initialDelay + n * perid
 
         log.info("间隔{}分钟推送：", perid);
-        executorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-//                queueprocessor.pushX24Msg();
-                queueprocessor.clockPushX24Msg();
-            }
-        }, perid, perid, TimeUnit.MINUTES);
+//        executorService.scheduleAtFixedRate(new Runnable() {
+//            @Override
+//            public void run() {
+////                queueprocessor.pushX24Msg();
+//                queueprocessor.clockPushX24Msg();
+//            }
+//        }, perid, perid, TimeUnit.MINUTES);
     }
 }

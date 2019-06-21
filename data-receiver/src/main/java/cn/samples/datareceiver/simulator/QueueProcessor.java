@@ -18,6 +18,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.connection.ConnectionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -42,7 +43,7 @@ public class QueueProcessor {
     /**
      * 推送报文至运维平台的时间间隔（单位：分）
      */
-    @Value("${send_time_interval:30}")
+    @Value("${x24.push.perid:30}")
     private int sendTimeInterval;
 
     @Autowired
@@ -155,22 +156,22 @@ public class QueueProcessor {
             String jsonStr = JSONObject.toJSONString(devices);
 //            JSON.toJSONString(devices);
             log.info("jsonStr:{}", jsonStr);
-            if (CollectionUtils.isEmpty(redisMap)) {
-                redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
-                redisUtil.saveToHashCache("device_info", cacheKey + ":" + hashKey, jsonStr);
-            } else {
-                // 查看哈希表 key 中，指定的字段是否存在
-                String hashV = redisUtil.getFromHashCache(cacheKey, hashKey);
-                if (StringUtils.isEmpty(hashV)) {
-                    redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
-                    redisUtil.saveToHashCache("device_info", cacheKey + ":" + hashKey, jsonStr);
-                } else {
-                    if (!hashV.equals(hashValue)) {
-                        redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
-                        redisUtil.saveToHashCache("device_info", cacheKey + ":" + hashKey, jsonStr);
-                    }
-                }
-            }
+//            redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
+            redisUtil.saveToHashCache("device_info", cacheKey + ":" + hashKey, jsonStr);
+//            if (CollectionUtils.isEmpty(redisMap)) {
+//            } else {
+//                // 查看哈希表 key 中，指定的字段是否存在
+//                String hashV = redisUtil.getFromHashCache(cacheKey, hashKey);
+//                if (StringUtils.isEmpty(hashV)) {
+//                    redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
+//                    redisUtil.saveToHashCache("device_info", cacheKey + ":" + hashKey, jsonStr);
+//                } else {
+//                    if (!hashV.equals(hashValue)) {
+//                        redisUtil.saveToHashCache(cacheKey, hashKey, hashValue);
+//                        redisUtil.saveToHashCache("device_info", cacheKey + ":" + hashKey, jsonStr);
+//                    }
+//                }
+//            }
 
             // 将x24对象转成jsonStr类型的
             CHANNEL channel = PackageUtil.getChannelFromXml(xml);
@@ -298,13 +299,17 @@ public class QueueProcessor {
             x24List.add(x24);
         });
 
-        String jsonStr = JSON.toJSONString(x24List);
-        log.info("jsonStr:{}", jsonStr);
-        redisUtil.saveToHashCache("front_show", "area_channel", jsonStr);
+        if(!CollectionUtils.isEmpty(x24List)) {
+            String jsonStr = JSON.toJSONString(x24List);
+            log.info("jsonStr:{}", jsonStr);
+            redisUtil.saveToHashCache("front_show", "area_channel", jsonStr);
 
-        // 推动组合好的24报文到运维平台
-        String response = HttpUtil.sendPostToJson(URL, JSON.toJSONString(x24List));
-        log.info("接口返回的内容为：{}", response);
+            // 推动组合好的24报文到运维平台
+            String response = HttpUtil.sendPostToJson(URL, jsonStr);
+            log.info("运维平台接口返回的内容为：{}", response);
+        }
+
+        log.info("推送的报文内容为空：{}", x24List.toString());
     }
 
     @Slf4j

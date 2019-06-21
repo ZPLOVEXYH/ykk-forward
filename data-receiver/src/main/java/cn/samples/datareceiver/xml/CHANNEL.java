@@ -22,7 +22,7 @@ public class CHANNEL implements Serializable {
     protected String chnlNo;
 
     // 通道状态：未登陆、正常（登陆）、注销、故障、告警
-    protected String chnlState = "正常（登陆）";
+    protected String chnlState;
 
     // 最近一次的更新时间
     protected Long lastUpdateTime = System.currentTimeMillis();
