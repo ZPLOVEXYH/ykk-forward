@@ -6,6 +6,7 @@ import cn.samples.datareceiver.model.Devices;
 import cn.samples.datareceiver.utils.HttpUtil;
 import cn.samples.datareceiver.utils.PackageUtil;
 import cn.samples.datareceiver.utils.RedisUtil;
+import cn.samples.datareceiver.xml.AREA;
 import cn.samples.datareceiver.xml.CHANNEL;
 import cn.samples.datareceiver.xml.DEVICES;
 import cn.samples.datareceiver.xml.X24;
@@ -199,14 +200,44 @@ public class DataReceiverApplicationTests {
             x24List.add(x24);
         });
 
-        String jsonStr = JSON.toJSONString(x24List);
+        Map<String, List<X24>> mapX24 = x24List.stream().collect(Collectors.groupingBy(x -> {
+            return x.getAreaId();
+        }));
+
+        List<AREA> areaList = new ArrayList<>();
+        mapX24.entrySet().stream().forEach(y -> {
+            AREA area = new AREA();
+            area.setAreaId(y.getKey());
+            area.setX24List(y.getValue());
+
+            areaList.add(area);
+        });
+
+        String jsonStr = JSON.toJSONString(areaList);
         log.info("jsonStr:{}", jsonStr);
         redisUtil.saveToHashCache("front_show", "area_channel", jsonStr);
 
         // 推动组合好的24报文到运维平台
-        String response = HttpUtil.sendPostToJson("http://localhost:8088/data/test", JSON.toJSONString(x24List));
+        String response = HttpUtil.sendPostToJson("http://localhost:8088/data/test", jsonStr);
         log.info("接口返回的内容为：{}", response);
 
+//        Map<String, List<String>> maps = channelRedisMap.keySet().stream().collect(Collectors.groupingBy(o -> {
+//            return o.toString().split("-")[0];
+//        }));
+//
+//        // 根据条件判断更新map的value值
+//        maps.entrySet().stream().forEach(value -> {
+//            List<String> deviceList = new ArrayList<>();
+//            value.getValue().stream().forEach(s -> {
+//                // 根据cachekey和hashkey到redis hash查询得到value值
+//                String deviceJsonStr = redisUtil.getFromHashCache("channel_info", s);
+//                deviceList.add(deviceJsonStr);
+//            });
+//
+//            value.setValue(deviceList);
+//        });
+//
+//        log.info("maps:{}", maps);
     }
 
     @Test

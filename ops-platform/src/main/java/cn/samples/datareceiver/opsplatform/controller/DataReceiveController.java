@@ -1,8 +1,9 @@
 package cn.samples.datareceiver.opsplatform.controller;
 
-import cn.samples.datareceiver.opsplatform.entity.DataReceive;
+import cn.samples.datareceiver.opsplatform.model.Area;
 import cn.samples.datareceiver.opsplatform.model.X24;
 import cn.samples.datareceiver.opsplatform.service.DataReceiveService;
+import cn.samples.datareceiver.opsplatform.service.X24Service;
 import cn.samples.datareceiver.opsplatform.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,8 +36,8 @@ public class DataReceiveController {
 //        return "success";
 //    }
 
-    @Autowired
-    DataReceiveService dataReceiveService;
+//    @Autowired
+//    DataReceiveService dataReceiveService;
 
 //    @ApiOperation("接收并处理转发平台推送的报文")
 //    @PostMapping(value = "/test", consumes = "application/json; cahrset=utf-8")
@@ -79,20 +80,28 @@ public class DataReceiveController {
 //    }
 
 
+    @Autowired
+    X24Service x24Service;
+
+    @Autowired
+    DataReceiveService dataReceiveService;
+
     @ApiOperation("接收并处理转发平台推送的报文")
     @PostMapping(value = "/test", consumes = "application/json; cahrset=utf-8")
-    public Result testDataReceive(@RequestBody List<X24> x24List) {
-        log.info("打印的消息内容为：{}" + x24List.toString());
+    public Result testDataReceive(@RequestBody List<Area> areaList) {
+        log.info("打印的消息内容为：{}" + areaList.toString());
 
-        DataReceive dataReceive = new DataReceive();
-        dataReceive.setXmlString(x24List.toString());
+        areaList.stream().forEach(x -> {
+            boolean x24Insert = x24Service.insertBatch(x.getX24List());
+            log.info("批量插入x24到数据库：{}", x24Insert);
 
-        boolean insertBool = dataReceiveService.insert(dataReceive);
-        if (insertBool) {
-            log.info("插入成功：{}", insertBool);
-        } else {
-            log.info("插入失败：{}", insertBool);
-        }
+            List<X24> x24List = x.getX24List();
+            x24List.stream().forEach(y -> {
+                y.getDevices().stream().forEach(t -> t.setChnlNo(y.getChnlNo()));
+                boolean deviceInsert = dataReceiveService.insertBatch(y.getDevices());
+                log.info("批量插入设备到数据库：{}", deviceInsert);
+            });
+        });
 
         return new Result(0, "success");
 
