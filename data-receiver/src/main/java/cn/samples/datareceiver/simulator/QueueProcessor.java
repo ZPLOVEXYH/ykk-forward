@@ -39,6 +39,12 @@ public class QueueProcessor {
     @Value("${interface_url:http://localhost:8088/data/test}")
     private String URL;
 
+    /**
+     * 推送报文至运维平台的时间间隔（单位：分）
+     */
+    @Value("${send_time_interval:30}")
+    private int sendTimeInterval;
+
     @Autowired
     RedisUtil redisUtil;
 
@@ -283,7 +289,7 @@ public class QueueProcessor {
             Long currentTime = System.currentTimeMillis();
             int gap = (int) ((currentTime - lastUpdateTime) / (1000 * 60));
             log.info("util.CountTimeGap 两个时间之间的分钟差gap为：{}", gap);
-            if (gap > 30) {
+            if (gap > sendTimeInterval) {
                 x24.setChnlState("1");
             }
 
