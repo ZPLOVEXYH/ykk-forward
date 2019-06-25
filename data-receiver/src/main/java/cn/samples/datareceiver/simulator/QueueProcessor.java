@@ -18,10 +18,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.connection.ConnectionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -59,8 +56,6 @@ public class QueueProcessor {
     public void enqueue(MsgData data) {
         try {
             queue.put(data);
-
-//            dequeue();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -299,7 +294,7 @@ public class QueueProcessor {
             x24List.add(x24);
         });
 
-        if(!CollectionUtils.isEmpty(x24List)) {
+        if (!CollectionUtils.isEmpty(x24List)) {
             String jsonStr = JSON.toJSONString(x24List);
             log.info("jsonStr:{}", jsonStr);
             redisUtil.saveToHashCache("front_show", "area_channel", jsonStr);

@@ -30,29 +30,28 @@ public class DataDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        int cnt = in.refCnt();
-        log.info("打印出来的计数为：{}", cnt);
-//        if (cnt > 0) {
-
-            DataPackage dp = decode(in);
-            if (null != dp) {
-                out.add(dp);
-            }
-//        }
-
-
+        DataPackage dp = decode(in);
+        if (null != dp) {
+            out.add(dp);
+        }
     }
 
+    /**
+     * 解码并校验报文的包头和包尾是否符合要求
+     *
+     * @param in
+     * @return
+     */
     public DataPackage decode(ByteBuf in) {
         if (in.readableBytes() < 8) {
+            in.release();
             return null;
         }
         // check head flag(0x89 0x4B 0x5C 0xE2)
-        int head = in.readIntLE();// head=-1991549726(溢出值)0x89 4B 5C E2
+        // head=-1991549726(溢出值)0x89 4B 5C E2
+        int head = in.readIntLE();
         if (head != -1991549726) {
-//			in.resetReaderIndex();
             in.release();
-            log.info("打印的包头信息：{}", head);
             throw new CorruptedFrameException("Invalid head package.");
         }
         int dataLength = in.readIntLE();
@@ -67,18 +66,24 @@ public class DataDecoder extends ByteToMessageDecoder {
         }
 
         Stopwatch timer = Stopwatch.createStarted(); // 添加计时
-
-        logger.debug("dataLength = {}", dataLength);
+        logger.info("dataLength = {}", dataLength);
         // check tail flag(0xff 0xff)
         in.readerIndex(dataLength - 2);
-        if (in.readByte() == 0xff && in.readByte() == 0xff) {
-            in.resetReaderIndex();
+        // 读取倒数第二位字节
+        byte a = in.readByte();
+        // 读取倒数第一位字节
+        byte b = in.readByte();
+        // 两个字节数相加判断
+        int c = a + b;
+        log.info("包尾2个字节的内容为：{} , {}, {}", a, b, c);
+        if (c != -2) {
+            in.release();
             throw new CorruptedFrameException("Invalid tail package.");
         }
         // get fully bytes
         byte[] alldata = new byte[dataLength];
         in.getBytes(0, alldata);
-        logger.debug("alldata.length = {}", alldata.length);
+        logger.info("alldata.length = {}", alldata.length);
         // FlowBytes to DataPackage
         DataPackage dp = new DataPackage();
         in.readerIndex(4);
@@ -101,7 +106,8 @@ public class DataDecoder extends ByteToMessageDecoder {
         }
         dp.setAllBytes(alldata); // 只用于保存日志，生成日志对象后可删除
         dp.setTimer(timer); // 添加计时
-
+        in.readerIndex(dataLength - 1);
+        in.readerIndex(dataLength);
         return dp;
     }
 
@@ -126,5 +132,9 @@ public class DataDecoder extends ByteToMessageDecoder {
         }
         dp.setContaPics(contaList);
         return true;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(0xff);
     }
 }

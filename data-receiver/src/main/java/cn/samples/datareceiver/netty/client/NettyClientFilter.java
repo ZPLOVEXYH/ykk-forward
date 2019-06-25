@@ -17,7 +17,6 @@ public class NettyClientFilter extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline channelPipeline = socketChannel.pipeline();
         channelPipeline.addLast(new DataDecoder());
-//        channelPipeline.addLast(new StringDecoder());
         channelPipeline.addLast(nettyClientHandler);
     }
 }
