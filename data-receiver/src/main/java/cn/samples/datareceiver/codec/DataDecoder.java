@@ -44,7 +44,6 @@ public class DataDecoder extends ByteToMessageDecoder {
      */
     public DataPackage decode(ByteBuf in) {
         if (in.readableBytes() < 8) {
-            in.release();
             return null;
         }
         // check head flag(0x89 0x4B 0x5C 0xE2)
