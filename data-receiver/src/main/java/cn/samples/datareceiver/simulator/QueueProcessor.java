@@ -176,8 +176,11 @@ public class QueueProcessor {
             if (1 == isKeyDev) {
                 // 获取关键设备的状态值，如果社保的状态值为故障状态，那么通道状态为故障状态
                 int statusValue = devices.getStatusValue();
+                // TODO 此处有问题，出现多个关键设备就会出现问题， 如果设备状态正常则设置为正常
                 if ("1".equals(statusValue)) {
                     channel.setChnlState("1");
+                } else {
+                    channel.setChnlState("0");
                 }
             }
 

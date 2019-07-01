@@ -3,6 +3,7 @@ package cn.samples.datareceiver;
 import cn.samples.datareceiver.model.Area;
 import cn.samples.datareceiver.model.Channel;
 import cn.samples.datareceiver.model.Devices;
+import cn.samples.datareceiver.serialport.SerialStarter;
 import cn.samples.datareceiver.utils.HttpUtil;
 import cn.samples.datareceiver.utils.PackageUtil;
 import cn.samples.datareceiver.utils.RedisUtil;
@@ -128,6 +129,8 @@ public class DataReceiverApplicationTests {
                 int statusValue = devices.getStatusValue();
                 if ("1".equals(statusValue)) {
                     channel.setChnlState("1");
+                } else {
+                    channel.setChnlState("0");
                 }
             }
 
@@ -284,6 +287,16 @@ public class DataReceiverApplicationTests {
         String response = HttpUtil.sendPostToJson("http://localhost:8088/data/test", JSON.toJSONString(areaList));
         log.info("接口返回的内容为：{}", response);
     }
+
+
+    @Autowired
+    SerialStarter serialStarter;
+
+    @Test
+    public void testSerialPort() {
+        serialStarter.startReader();
+    }
+
 
 
 }
