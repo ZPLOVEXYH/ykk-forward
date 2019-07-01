@@ -47,6 +47,7 @@ public class SerialReader {
             public void readerAndWriter(InputStream inputStream, OutputStream outputStream) {
                 try {
                     if (inputStream.available() > 0) {
+                        System.out.println("test," + new String(datas));
                         int size = inputStream.read(datas);
                         StringBuilder dataBuilder = new StringBuilder();
                         String iString;

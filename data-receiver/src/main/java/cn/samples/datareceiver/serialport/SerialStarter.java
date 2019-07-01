@@ -61,6 +61,31 @@ public class SerialStarter {
      * @param messageParser 传入的报文解析器
      */
     public void startReader() {
+//        List<String> listenerPortList = rxtxProperties.getListenerPortList();
+//
+//        for (String port : listenerPortList) {
+//            new Thread() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        serialReader.startReaderListener();
+//                    } catch (NoSuchPortException e) {
+//                        e.printStackTrace();
+//                    } catch (PortInUseException e) {
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    } catch (TooManyListenersException e) {
+//                        e.printStackTrace();
+//                    } catch (UnsupportedCommOperationException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }.start();
+//
+//            log.info("正在监听串口:{} ", port.toUpperCase());
+//        }
+
         new Thread() {
             @Override
             public void run() {
@@ -78,24 +103,9 @@ public class SerialStarter {
                     e.printStackTrace();
                 }
             }
-
         }.start();
 
-//		try {
-//			serialReader.startReaderListener();
-//		} catch (NoSuchPortException e) {
-//			e.printStackTrace();
-//		} catch (PortInUseException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (TooManyListenersException e) {
-//			e.printStackTrace();
-//		} catch (UnsupportedCommOperationException e) {
-//			e.printStackTrace();
-//		}
-
-        log.info("正在监听串口:{} ", rxtxProperties.getPort());
+        log.info("正在监听串口:{} ", rxtxProperties.getPort().toUpperCase());
     }
 
 }

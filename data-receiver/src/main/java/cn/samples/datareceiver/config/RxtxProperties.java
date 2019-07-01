@@ -2,10 +2,12 @@ package cn.samples.datareceiver.config;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 读取配置文件信息
@@ -63,4 +65,10 @@ public class RxtxProperties {
      */
     @NotNull
     private String appName;
+
+    /**
+     * 监听的串口集合
+     */
+    @Value("#{'${serial.rxtx.listener_port_list}'.split(',')}")
+    private List<String> listenerPortList;
 }
