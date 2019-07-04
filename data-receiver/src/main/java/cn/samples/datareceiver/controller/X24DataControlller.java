@@ -1,5 +1,6 @@
 package cn.samples.datareceiver.controller;
 
+import cn.samples.datareceiver.model.AreaNode;
 import cn.samples.datareceiver.utils.RedisUtil;
 import cn.samples.datareceiver.utils.Result;
 import cn.samples.datareceiver.xml.X24;
@@ -28,5 +29,18 @@ public class X24DataControlller {
         List<X24> x24List = JSON.parseArray(jsonStr, X24.class);
 
         return new Result(0, true, "ok", x24List);
+    }
+
+    /**
+     * 查询得到场站集合
+     *
+     * @return
+     */
+    @GetMapping(value = "/queryAreaList")
+    public Result queryAreaList() {
+        String jsonStr = redisUtil.getFromCache("channel_info");
+        List<AreaNode> areaNodeList = JSON.parseArray(jsonStr, AreaNode.class);
+
+        return new Result(0, true, "ok", areaNodeList);
     }
 }

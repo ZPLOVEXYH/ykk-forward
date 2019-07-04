@@ -34,7 +34,7 @@ public class MessageParse implements MessageParseAble {
             log.info("监听得到的消息内容提供为：{}", message);
             // 如果内容不为空，那么将内容保存到redis当中
             if (!StringUtils.isBlank(message)) {
-                redisUtil.saveToSetCache("channel_info", message);
+                redisUtil.saveToCache("channel_info", message);
             }
         }
     }
