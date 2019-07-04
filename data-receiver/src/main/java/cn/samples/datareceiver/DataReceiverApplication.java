@@ -1,7 +1,7 @@
 package cn.samples.datareceiver;
 
 import cn.samples.datareceiver.netty.client.TCPClient;
-import cn.samples.datareceiver.serialport.SerialStarter;
+import cn.samples.datareceiver.serialport.port.SerialPortUtils;
 import cn.samples.datareceiver.simulator.QueueProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
@@ -29,7 +29,7 @@ public class DataReceiverApplication implements CommandLineRunner {
     private QueueProcessor queueprocessor;
 
     @Autowired
-    SerialStarter serialStarter;
+    SerialPortUtils serialPortUtils;
 
     public static void main(String[] args) {
         SpringApplication.run(DataReceiverApplication.class, args);
@@ -77,7 +77,8 @@ public class DataReceiverApplication implements CommandLineRunner {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                serialStarter.startReader();
+                serialPortUtils.init();
+                serialPortUtils.readComm();
             }
         }, "SerialPortReaderThread").start();
     }

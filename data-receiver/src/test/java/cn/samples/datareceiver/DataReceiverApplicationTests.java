@@ -1,9 +1,11 @@
 package cn.samples.datareceiver;
 
+import cn.samples.datareceiver.config.RxtxProperties;
 import cn.samples.datareceiver.model.Area;
 import cn.samples.datareceiver.model.Channel;
 import cn.samples.datareceiver.model.Devices;
 import cn.samples.datareceiver.serialport.SerialStarter;
+import cn.samples.datareceiver.serialport.port.SerialPortUtils;
 import cn.samples.datareceiver.utils.HttpUtil;
 import cn.samples.datareceiver.utils.PackageUtil;
 import cn.samples.datareceiver.utils.RedisUtil;
@@ -297,6 +299,20 @@ public class DataReceiverApplicationTests {
         serialStarter.startReader();
     }
 
+    @Autowired
+    RxtxProperties rxtxProperties;
+
+    @Test
+    public void testbody() {
+        // 实例化串口操作类对象
+        SerialPortUtils serialPort2 = new SerialPortUtils();
+        // 创建串口必要参数接收类并赋值，赋值串口号，波特率，校验位，数据位，停止位
+        // 初始化设置,打开串口，开始监听读取串口数据
+        serialPort2.init();
+        serialPort2.readComm();
+        String s = SerialPortUtils.sb.toString();
+        System.out.println(s);
+    }
 
 
 }
