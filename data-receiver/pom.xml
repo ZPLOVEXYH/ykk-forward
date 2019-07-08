@@ -123,6 +123,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.samples</groupId>
+            <artifactId>RXTXcomm</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -147,5 +153,19 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>3rd-party</id>
+            <name>maven-sanbao</name>
+            <url>http://192.168.43.183:8081/repository/3rd-party/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
 
 </project>

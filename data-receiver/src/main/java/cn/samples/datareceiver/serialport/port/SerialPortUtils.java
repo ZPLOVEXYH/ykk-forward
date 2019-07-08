@@ -4,6 +4,7 @@ import cn.samples.datareceiver.config.RxtxProperties;
 import cn.samples.datareceiver.service.MessageParseAble;
 import cn.samples.datareceiver.utils.StringUtils;
 import gnu.io.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.TooManyListenersException;
  * 串口参数的配置 串口一般有如下参数可以在该串口打开以前进行配置： 包括串口号，波特率，输入/输出流控制，数据位数，停止位和奇偶校验。
  */
 // 注：串口操作类一定要继承SerialPortEventListener
+@Slf4j
 @Service
 public class SerialPortUtils implements SerialPortEventListener {
     // 检测系统中可用的通讯端口类
@@ -154,7 +156,7 @@ public class SerialPortUtils implements SerialPortEventListener {
                     // 直接获取到的数据
                     data = new String(readBuffer, 0, len).trim();
                     sumLength += len;
-                    System.out.println("data:" + data);
+                    log.info("获取得到的数据为data:" + data);
                     inputStream.close();
                     inputStream = null;
                     break;
