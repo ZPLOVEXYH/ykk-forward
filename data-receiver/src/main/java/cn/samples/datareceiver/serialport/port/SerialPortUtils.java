@@ -156,7 +156,6 @@ public class SerialPortUtils implements SerialPortEventListener {
                     // 直接获取到的数据
                     data = new String(readBuffer, 0, len).trim();
                     sumLength += len;
-                    log.info("获取得到的数据为data:" + data);
                     inputStream.close();
                     inputStream = null;
                     break;
